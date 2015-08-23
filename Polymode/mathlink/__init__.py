@@ -10,17 +10,17 @@ def utf8out(s):
     Encode string to utf8 if unicode output is enabled, otherwise replace with ascii
     representations of technical symbols.
     """
-    if _output_unicode:
-        s = s.encode('utf8')
-    else:
-        unicode_greek = {'α':'alpha', 'β':'beta','γ':'gamma','δ':'delta','ε':'epsilon',
-            'θ':'theta', 'λ':'wl', 'μ':'u', 'π':'pi', 'φ':'phi', 'ω':'ang. freq.', 'ϕ':'phi',
-            '₀':'0', '₂':'2', '₁':'1', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9'}
-        
-        for x in unicode_greek.keys():
-            s = s.replace(unicode(x,'utf8'), unicode_greek[x])
-
-        s = s.encode('ascii', 'ignore')
+#    if _output_unicode:
+#        s = s.encode('utf8')
+#    else:
+#        unicode_greek = {'α':'alpha', 'β':'beta','γ':'gamma','δ':'delta','ε':'epsilon',
+#            'θ':'theta', 'λ':'wl', 'μ':'u', 'π':'pi', 'φ':'phi', 'ω':'ang. freq.', 'ϕ':'phi',
+#            '₀':'0', '₂':'2', '₁':'1', '₃':'3', '₄':'4', '₅':'5', '₆':'6', '₇':'7', '₈':'8', '₉':'9'}
+#        
+#        for x in unicode_greek.keys():
+#            s = s.replace(unicode(x,'utf8'), unicode_greek[x])#
+#
+#        s = s.encode('ascii', 'ignore')
     return s
 
 #Import bessel functions from scipy or amos

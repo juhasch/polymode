@@ -23,7 +23,7 @@ Lightwieght flexible coordinate classes for vector calculations
 import logging
 
 from numpy import *
-from cached_calculation import *
+from .cached_calculation import *
 from ..difflounge import finitedifference
 
 def vector_polar_to_cartesian(At, coord):
@@ -176,7 +176,7 @@ class PolarCoord(Coord):
         self.difforder = difforder
     
     def __str__(self):
-        return "<%s: r=%s, ϕ=%s, N=%s>" % (type(self).__name__, self.rrange, self.arange, self.shape)
+        return "<%s: r=%s, Õ=%s, N=%s>" % (type(self).__name__, self.rrange, self.arange, self.shape)
     
     def calc_dr(self):
         dr = (self.rrange[1]-self.rrange[0])/self.shape[0]
@@ -422,15 +422,15 @@ class CartesianCoord(Coord):
     diffy = CachedCalculation(calc_diffy)
         
     def grad_t(self, f, m0=0, fourier=False):
-        "Transverse gradiant = ∇⟂f"
+        "Transverse gradiant = Âf"
         if fourier: raise NotImplementedError
         return (self.diffx.diff1(f), self.diffy.diff(f, axis=1))
     def div_t(self, At, m0=0, fourier=False):
-        "Transverse divergence = ∇⟂∙A⟂"
+        "Transverse divergence = ÂAÂ"
         if fourier: raise NotImplementedError
         return self.diffx.diff1(At[0]) + self.diffy.diff(At[1], axis=1)
     def curl_t(self, At, m0=0, fourier=False):
-        "z-component of transverse curl = ẑ∙∇⟂×A⟂"
+        "z-component of transverse curl = zÂ×AÂ"
         if fourier: raise NotImplementedError
         return self.diffx.diff1(At[1]) - self.diffy.diff(At[0], axis=1)
 
@@ -461,12 +461,12 @@ class CartesianCoordZero(CartesianCoord):
     
 if __name__=="__main__":
     cc = CartesianCoord( rangex=(0,1), rangey=(0,1), N=(5,5), border=0)
-    print cc
-    print cc.xv
-    print cc.yv
+    print(cc)
+    print(cc.xv)
+    print(cc.yv)
 
     cc2 = CartesianCoord( rangex=(2,4), rangey=(-2,0), N=(5,5), border=0)
-    print cc2
-    print cc2.xv
-    print cc2.yv
+    print(cc2)
+    print(cc2.xv)
+    print(cc2.yv)
 

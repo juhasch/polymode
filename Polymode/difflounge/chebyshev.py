@@ -54,7 +54,7 @@ class ChebyshevDense(ChebyshevBase):
 		self.cache = {}
 		
 	def diff_matrix(self, dn=1):
-		if not self.cache.has_key('N') or self.N <> self.cache['N']:
+		if not self.cache.has_key('N') or self.N != self.cache['N']:
 			self.cache = {}
 			self.cache['N'] = self.N
 			self.cache['maxdn'] = 0

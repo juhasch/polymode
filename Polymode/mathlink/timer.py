@@ -63,12 +63,12 @@ class timer:
         ts = sorted(self.times.values(), reverse=1)
         maxlen = max([len(str(t.label)) for t in ts])
         
-        print "Name%s Time \t\tCalls \tTime per call" % (" "*(maxlen-4))
+        print("Name%s Time \t\tCalls \tTime per call" % (" "*(maxlen-4)))
         
         for t in ts:
             gap = " "*(maxlen-len(str(t.label)))
-            print "%s%s %.4fs \t%d \t%.6fs" % \
-                (t.label, gap, t.time, t.count, t.average())
+            print("%s%s %.4fs \t%d \t%.6fs" % \
+                (t.label, gap, t.time, t.count, t.average()))
     
     def timenow(self):
         now = time.time()
@@ -168,7 +168,7 @@ class Marker:
         self.times += [t]                   #Save the current time and name
         self.save(t)                                    #Save in file, if it exists
         if self.verbose:
-            print "%s: %s" % (t[1], self.pretty_elapsed(t[0]))
+            print("%s: %s" % (t[1], self.pretty_elapsed(t[0])))
 
     def save(self,t):
         if hasattr(self,'file'):

@@ -486,9 +486,9 @@ class AdaptiveWavelengthTrack(Solve):
             dmu = -dot(conj(m1.left), M1x)/dot(conj(m1.left), M0px)
             dneffc1 = (m1.neff**2/m1.wavelength+0.5*dmu/m1.k0)/m1.neff
             dneffc = sqrt(m1.evalue+dmu)/m2.k0 - m1.neff
-            print "dneff(1)", dneffc1
-            print "dneff(2)", dneffc
-            print
+            print("dneff(1)", dneffc1)
+            print("dneff(2)", dneffc)
+            print("")
             
             neff_guess += [sqrt(m1.evalue+dmu)/m2.k0]
             
@@ -511,8 +511,8 @@ class AdaptiveWavelengthTrack(Solve):
             y = m1.right + delta*x1
 
             solver.equation.set_lambda(m2.evalue)
-            print "Diff1", linalg.norm(solver.equation(y)-m2.evalue*y)
-            print "Diff2", linalg.norm(solver.equation(m1.right)-m2.evalue*m1.right)
+            print("Diff1", linalg.norm(solver.equation(y)-m2.evalue*y))
+            print("Diff2", linalg.norm(solver.equation(m1.right)-m2.evalue*m1.right))
             
     def plot(self, style=''):
         """Plot the found effective index versus the wavelength for all modes

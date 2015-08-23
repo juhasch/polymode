@@ -1,4 +1,4 @@
-# _*_ coding=utf-8 _*_
+# -*- coding: utf-8 -*-
 
 #---------------------------------------------------------------------------------
 #Copyright © 2009 Andrew Docherty
@@ -63,10 +63,10 @@ class Material:
         return dscr
         
     def info(self):
-        print "%s" % self
-        print "Wavelength limits (um): %.4g->%.4g" % tuple(self.wl_limits)
-        print "Temperature limits (K): %.4g->%.4g" % tuple(self.temp_limits)
-        print "Cite: %s" % self.citation
+        print("%s" % self)
+        print("Wavelength limits (um): %.4g->%.4g" % tuple(self.wl_limits))
+        print("Temperature limits (K): %.4g->%.4g" % tuple(self.temp_limits))
+        print("Cite: %s" % self.citation)
         
     def wavelength_derivative(self, x, dx=0.01, units='wl'):
         '''
@@ -95,9 +95,9 @@ class Material:
                 else:
                     wlrange = "%.4g" % (wavelength)
 
-                logging.warning( utf8out(u"The wavelength %sμm is outside the valid\n" % (wlrange)
+                logging.warning( utf8out(u"The wavelength %s¼m is outside the valid\n" % (wlrange)
                 + u"\trange for this material, large errors may result.\n"
-                + u"\t%s only has data in the range (%.4g, %.4g)μm" % ((self,)+self.wl_limits)) )
+                + u"\t%s only has data in the range (%.4g, %.4g)¼m" % ((self,)+self.wl_limits)) )
                 
 #           if any(self.T<min(self.temp_limits)) or any(self.T>max(self.temp_limits)):
 #               logging.warning("Refractive index is being requested outside the valid temperature")
@@ -276,9 +276,9 @@ class Composite(Material):
         self.itype = interpolation
     
     def info(self):
-        print "Composite of:"
+        print("Composite of:")
         for mat,w in zip(self.materials, self.weights):
-            print "> %.2g%% \t%s " % (w*100, mat)
+            print("> %.2g%% \t%s " % (w*100, mat))
         
     def index_function(self, wavelength):
         Nmaterial = len(self.materials)
@@ -475,9 +475,9 @@ class SopraFile(GeneralFile):
         #Read in first info line
         try:
             params = map(float, f.readline().split())
-            if len(params)<>4: raise ValueError
+            if len(params) != 4: raise ValueError
         except ValueError:
-            raise ValueError, "File %s not a SOPRA data file!"
+            raise(ValueError, "File %s not a SOPRA data file!")
         
         wlunits = {1:'ev', 2:'um', 3:'/cm', 4:'nm'}[int(params[0])]
         
@@ -504,11 +504,11 @@ class Sopra(SopraFile):
         
         respath = 'data/Sopra/'
         if pkg_resources.resource_exists(__name__, respath+'%s.all' % name):
-            raise NotImplementedError, "Multi-file luxpop data not implemented"
+            raise(NotImplementedError, "Multi-file luxpop data not implemented")
         elif pkg_resources.resource_exists(__name__, respath+'%s.nk' % name):
             sopra_file = pkg_resources.resource_stream(__name__, respath+'%s.nk' % (name))
         else:
-            raise RuntimeError, "Couldn't find Sopra datafile"
+            raise(RuntimeError, "Couldn't find Sopra datafile")
         
         SopraFile.__init__(self,sopra_file)
 
@@ -551,7 +551,7 @@ class Luxpop(GeneralFile):
                 wli = wlr; nimag = nreal*0
 
         else:
-            raise ValueError, "Material file not found"
+            raise(ValueError, "Material file not found")
 
         #Convert the wavelengths and store the data
         self.wlr = self.convertwavelength(wlr, wlunits)
@@ -687,7 +687,7 @@ class Air(Fixed):
 #==================== Optical Polymers ========================#
 
 class PMMA(CauchyApproximation):
-    __doc__ = utf8out(u"Polymethyl methacrylate (C₅O₂H₈)n")
+    __doc__ = 'Polymethyl methacrylate (C5O2H8)n'
     name = "PMMA"
     color = 'dodgerblue'
     wl_limits = (0.25,1.5)
@@ -696,7 +696,7 @@ class PMMA(CauchyApproximation):
 Polymer = PMMA
 
 class PMMAKasarova(CauchyApproximation):
-    __doc__ = utf8out(u"Polymethyl methacrylate (C₅O₂H₈)n Polymer at 20°C")
+    __doc__ = 'Polymethyl methacrylate (C5O2H8)n Polymer at 20°C'
     citation = "S. N. Kasarova et al., Optical Materials 29, 1481-1490, 2007"
     link = "doi:10.1016/j.optmat.2006.07.010"
     name = "PMMA"
@@ -859,7 +859,7 @@ class Acrylic(CauchyApproximation):
 #================= Glasses ===================#
 
 class Silica(Sellmeier):
-    __doc__ = name = utf8out(u"Fused Silicon Oxide (SiO₂)")
+    __doc__ = name = utf8out(u"Fused Silicon Oxide (SiO)")
     citation = "Malitson 1965, http://www.opticsinfobase.org/abstract.cfm?URI=josa-55-10-1205"
     color = 'yellow'
     wl_limits = (0.2,3.8)
@@ -885,7 +885,7 @@ class Quartz(Laurent):
         -1.94741000e-06, 9.36476000e-08 ]
 
 class Germania(ClassiusMorlotti):
-    __doc__ = name = utf8out(u"Germanium Oxide (GeO₂)")
+    __doc__ = name = utf8out(u"Germanium Oxide (GeO)")
     citation = "Sunak, H.R.D.; Bastien, S.P., Photonics Technology Letters V1 N6 142-145, 1989"
     color = 'lawngreen'
     wl_limits = (0.6,1.8)
@@ -894,7 +894,7 @@ class Germania(ClassiusMorlotti):
     L = aa_([0.060928804, 0.1419148170, 10.86114943])
 
 class SiO2GeO2(ClassiusMorlotti):
-    __doc__ = utf8out(u"Silica (SiO₂) doped with a molar fraction f of Germania (GeO₂)")
+    __doc__ = utf8out(u"Silica (SiO) doped with a molar fraction f of Germania (GeO)")
     name = "Silica doped with Germania"
     citation = "Sunak, H.R.D.; Bastien, S.P., Photonics Technology Letters V1 N6 142-145, 1989"
     color = 'lightgreen'
@@ -905,11 +905,11 @@ class SiO2GeO2(ClassiusMorlotti):
     D = aa_([-0.1011783769, 0.1778934999, -0.164179581])
     def __init__(self, f=0):
         if f>0.2:
-            logging.warning(utf8out(u"SiO₂/GeO₂: Dopant levels greater than 20% may be inaccurate") )
+            logging.warning(utf8out(u"SiO/GeO: Dopant levels greater than 20% may be inaccurate") )
         self.f = f
 
 class SiO2Fl(ClassiusMorlotti):
-    __doc__ = utf8out(u"Silica (SiO₂) doped with a molar fraction f of Flourine")
+    __doc__ = utf8out(u"Silica (SiO) doped with a molar fraction f of Flourine")
     name = "Silica doped with Flourine"
     citation = "Sunak, H.R.D.; Bastien, S.P., Photonics Technology Letters V1 N6 142-145, 1989"
     color = 'cornsilk'
@@ -920,7 +920,7 @@ class SiO2Fl(ClassiusMorlotti):
     D = aa_([-0.05413938039, -0.1788588824, -0.07445931332])
     def __init__(self, f=0):
         if f>0.02:
-            logging.warning(utf8out(u"SiO₂Fl: Dopant levels greater than 2% may be inaccurate") )
+            logging.warning(utf8out(u"SiOFl: Dopant levels greater than 2% may be inaccurate") )
         self.f = f
 
 
@@ -960,13 +960,13 @@ def find_materials(search_string):
             if pkg_resources.resource_isdir(__name__, 'data/'+datadir):
                 names = pkg_resources.resource_listdir(__name__, 'data/'+datadir)
                 names = filter(lambda name: name.lower().find(ss)>=0, names)
-                names = filter(lambda name: name.lower()[-4:]<>'html', names)
+                names = filter(lambda name: name.lower()[-4:] != 'html', names)
                 found[datadir.capitalize()] = names
 
-    print "\nMaterials found in internal datafiles:"
+    print("\nMaterials found in internal datafiles:")
     for resource in found:
         if len(found[resource])>0:
-            print "\n%s materials:" % resource
-            print "\n".join(found[resource]).replace('.nk','').replace('.dat','').replace('.all','')
+            print("\n%s materials:" % resource)
+            print("\n".join(found[resource]).replace('.nk','').replace('.dat','').replace('.all',''))
     print
     

@@ -621,10 +621,10 @@ class WgAnnulus(object):
         return cmp(self.rstart, other.rstart)
 
     def __str__(self):
-        return "(%s, z:%d r:%.2g→%.2g, ϕ:%.2g→%.2g)" \
+        return "(%s, z:%d r:%.2g%.2g, Õ:%.2g%.2g)" \
             % ((self.material,self.zorder) + self.r + self.phi)
     def __repr__(self):
-        return "(%s, z:%d r:%.2g→%.2g, ϕ:%.2g→%.2g)" \
+        return "(%s, z:%d r:%.2g%.2g, Õ:%.2g%.2g)" \
             % ((self.material,self.zorder) + self.r + self.phi)
 
 
@@ -1356,7 +1356,7 @@ class AnnularCombine(Combine):
 
         na += [WgAnnulus(zone2, (a2.rstart,rendsort[0]), a1.phi)]
     
-        if a2.rend<>a1.rend:
+        if a2.rend != a1.rend:
             na += [WgAnnulus(zone3, rendsort, a1.phi)]
         return na
 
@@ -1534,12 +1534,12 @@ class AnnularCombine(Combine):
                 
             #Truncated analytic fourier series of step annulus
             #
-            # G_m = 1/T ∫_ϕ₀^ϕ₁ g(x) exp(-2πi m/T ϕ) dϕ          with T= 2π/μ
-            #     = -μ/(2πi mμ) [exp(-i mμ ϕ₁) - exp(-i mμ ϕ₀)]
-            # G_0 = μ/(2π) [ϕ₁ - ϕ₀]
+            # G_m = 1/T +_Õ^Õ g(x) exp(-2Ài m/T Õ) dÕ          with T= 2À/¼
+            #     = -¼/(2Ài m¼) [exp(-i m¼ Õ) - exp(-i m¼ Õ)]
+            # G_0 = ¼/(2À) [Õ - Õ]
             #
             elif self.coord.reflect:
-                raise NotImplementedError, "Reflection symmetry not yet implemented"
+                raise(NotImplementedError, "Reflection symmetry not yet implemented")
             else:
                 Fth[1:]=dm/(ms[1:]*2j*pi)*(exp(-1j*ms[1:]*phia)-exp(-1j*ms[1:]*phib))
                 Fth[0]=dm*(phib-phia)/(2*pi)
@@ -1606,8 +1606,8 @@ class AnnularCombine(Combine):
         minphi = min([a.phi[0] for a in self.annuli])
         maxphi = max([a.phi[1] for a in self.annuli])
 
-        print "Found annuli in range %.6g to %.6g" % (minphi*180/pi, maxphi*180/pi)
-        print "Saving %d annuli to '%s'" % (numannuli,filename)
+        print("Found annuli in range %.6g to %.6g" % (minphi*180/pi, maxphi*180/pi))
+        print("Saving %d annuli to '%s'" % (numannuli,filename))
 
         waveguidefile = open(filename, "w")
         
@@ -1924,7 +1924,7 @@ class Waveguide(object):
                 logging.warning( "Padding nodes %d less than minimum, increase rmax?" \
                 % nodes_in_padding )
 
-        #Combined object to collect n(r,φ)² d/dr log[n(r,φ)²] and d/dφ log[n(r,φ)²]
+        #Combined object to collect n(r,Æ)² d/dr log[n(r,Æ)²] and d/dÆ log[n(r,Æ)²]
         if mask is not None:
             combinedri = CombinedMask(coord, self.material, mask, dtype=complex_)
         else:

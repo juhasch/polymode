@@ -1,4 +1,4 @@
-# _*_ coding=utf-8 _*_
+# -*- coding: utf-8 -*-
 #
 #---------------------------------------------------------------------------------
 #Copyright © 2009 Andrew Docherty
@@ -140,7 +140,7 @@ def filter_unique_modes(modes, cutoff=1e-8):
         if np.abs(m1.evalue-m2.evalue)<abs(m1.evalue)*cutoff:
             ip = np.dot(np.conj(m1.left), m2.right)
             if np.abs(ip)>1e-8:
-                print "Repeated:",m1.neff,m2.neff
+                print("Repeated:",m1.neff,m2.neff)
                 unique[ii+1] = 0
     
     modes = [smodes[ii] for ii in np.transpose(np.nonzero(unique))]
@@ -198,8 +198,8 @@ def construct_combined_mode(modes, coeffs, neff=None, wl=None):
     Construct a mode from a linear combination of other modes.
     given the modes and the coefficients the mode fields are
     combined as:
-        F = Σᵢ aᵢ Fᵢ
-    Where F is the field Fᵢ is the field of the ith mode and aᵢ the
+        F = £b ab Fb
+    Where F is the field Fb is the field of the ith mode and ab the
     ith coefficient.
     
     Parameters
@@ -330,7 +330,7 @@ class Mode(object):
     @property
     def gamma_ext(self):
         """
-        Calculate the mode parameter, ɣ = √[n₀² k₀² - β²]
+        Calculate the mode parameter, c = [n² k² - ²²]
         """
         n = self.exterior_index
         return branchsqrt((n*self.k0)**2-self.evalue)
@@ -338,7 +338,7 @@ class Mode(object):
     @property
     def gamma_int(self):
         """
-        Calculate the mode parameter, ɣ = √[n₀² k₀² - β²]
+        Calculate the mode parameter, c = [n² k² - ²²]
         """
         n = self.interior_index
         return branchsqrt((n*self.k0)**2-self.evalue)
@@ -362,17 +362,17 @@ class Mode(object):
     
     #@property
     def get_beta(self):
-        "Return the modal eigenvalue, β"
+        "Return the modal eigenvalue, ²"
         return sp.sqrt(self.evalue)
     #@beta.setter
     def set_beta(self, value):
-        "Return the modal eigenvalue, β"
+        "Return the modal eigenvalue, ²"
         self.evalue =  value**2
     beta = property(get_beta, set_beta)
     
     @property
     def loss(self):
-        "Calculate the confinement loss of the mode as loss = 2×10⁷ Im{β}/ln(10) db/m"
+        "Calculate the confinement loss of the mode as loss = 2×10w Im{²}/ln(10) db/m"
         return 2e7*np.imag(self.beta)/np.log(10)
 
     def is_converged(self):
@@ -464,7 +464,7 @@ class Mode(object):
     def poynting(self, **kwargs):
         '''
         The logitudinal component of the time averaged Poyting vector
-        S_z = 0.5 ẑ∙(e×h*)
+        S_z = 0.5 (e×h*)
         '''
         ht = self.magnetic_transverse_field(**kwargs)
         et = self.electric_transverse_field(**kwargs)
@@ -479,7 +479,7 @@ class Mode(object):
     def mode_power(self, r=None, coord=None):
         '''
         The power in the computational region
-        S_z = 1/2 |Aj|² ∫ (e×h*)∙ẑ dA
+        S_z = 1/2 |Aj|² + (e×h*) dA
         '''
         if coord is None: coord = self.coord
         
@@ -493,7 +493,7 @@ class Mode(object):
 
     def mode_unconjugated_integral(self, fourier=True, coord=None):
         '''
-        I = ∫ (e×h)∙ẑ dA
+        I = + (e×h) dA
         
         Parameters
         ---------
@@ -527,7 +527,7 @@ class Mode(object):
     def effective_area(self, coord=None):
         '''
         Nonlinear effective area of mode in um²
-        Aeff = [∫ |Sz|² dA]² / ∫ |Sz|⁴ dA
+        Aeff = [+ |Sz|² dA]² / + |Sz|t dA
         See Agrawal pg.
 
         Parameters
@@ -558,7 +558,7 @@ class Mode(object):
     def spot_size(self, coord=None):
         '''
         Caculate the Petersen II spot size calculated as
-        spot size = [∫ Sz² dA]² / ∫ (∇Sz)² dA
+        spot size = [+ Sz² dA]² / + (Sz)² dA
 
         Parameters
         ---------
@@ -826,8 +826,8 @@ class Mode(object):
             is given as an argument more information will be given
         """
         info_str = self.__str__().decode('utf8') + "\n"
-        info_str += u" | Effective area: %.5g μm²\n" % self.effective_area()
-        info_str += u" | Spot size: %.5g μm\n" %(self.spot_size())
+        info_str += u" | Effective area: %.5g ¼m²\n" % self.effective_area()
+        info_str += u" | Spot size: %.5g ¼m\n" %(self.spot_size())
         info_str += u" | Single moded numerical aperture: %.5g\n" %(self.numerical_aperture())
         if self.is_spurious:
             info_str += " | Possible spurious mode\n"
@@ -839,7 +839,7 @@ class Mode(object):
             info_str += " | Group index: %s m/s\n" % self.group_index(wg)
             info_str += " | Mode class: %s\n" % self.estimate_class(wg)
             info_str += " | Power in core: %.5g%%\n" % (100*self.mode_power(r=rc)/self.mode_power())
-        print utf8out(info_str)
+        print(info_str)
 
     # -------------------------------------------------------------------
     # Misc functions for 2 Modes
@@ -857,7 +857,7 @@ class Mode(object):
         if hasattr(self,'right') and hasattr(other,'left'):
             return sum(self.right*other.left)
         else:
-            raise IndexError, "Modes do not have left & right members!"
+            raise(IndexError, "Modes do not have left & right members!")
 
     def __str__(self):
         info_dict = {}
@@ -875,8 +875,8 @@ class Mode(object):
             info_dict['symm'] = "C%d" % self.symmetry
         
         #Construct information string
-        info_str = u"Mode, size: %(shape)s, symmetry: %(symm)s, m₀: %(m0)d\n" % info_dict
-        info_str += u"λ: %(wl).4g, r: %(rmin).3g -> %(rmax).3g, res: %(res).2g\n" % info_dict
+        info_str = u"Mode, size: %(shape)s, symmetry: %(symm)s, m: %(m0)d\n" % info_dict
+        info_str += u"»: %(wl).4g, r: %(rmin).3g -> %(rmax).3g, res: %(res).2g\n" % info_dict
         info_str += u"neff=%s, loss=%.4gdB/m, %s" % (misc.format_complex(self.neff), self.loss, info_dict['userlab'])
         return utf8out(info_str)
 
@@ -886,7 +886,7 @@ class Mode(object):
         clab = ("E","")[self.is_converged()]
         userlab = ", ".join(["%s: %s" % (x,self.label[x]) for x in self.label])
 
-        info_str = u"<%s: m₀=%d λ=%.4g neff=%s r:%.2g %s [%s%s]>" \
+        info_str = u"<%s: m=%d »=%.4g neff=%s r:%.2g %s [%s%s]>" \
             % (self.__class__.__name__, self.m0, self.wl, \
                 misc.format_complex(self.neff), res, userlab, slab, clab)
         return utf8out(info_str)
@@ -1012,10 +1012,10 @@ class VectorMode(Mode):
     def get_right(self, swap=False):
         """
         Return the right eigenvector of the mode.
-        swap: swap the Fourier frequencies m⟶-m
+        swap: swap the Fourier frequencies mö-m
         """
         if self.right is None:
-            raise RuntimeError, "No right eigenvector is available!"
+            raise(RuntimeError, "No right eigenvector is available!")
 
         #Shape the vector correctly
         mdata = np.rollaxis(self.shape_vector(self.right),2)
@@ -1028,10 +1028,10 @@ class VectorMode(Mode):
         """
         Return the left eigenvector of the mode.
         field:   return mode corrected to electric field of mode
-        swap: swap the Fourier frequencies m⟶-m
+        swap: swap the Fourier frequencies mö-m
         """
         if self.left is None:
-            raise RuntimeError, "No left eigenvector is available!"
+            raise(RuntimeError, "No left eigenvector is available!")
 
         #Shape the vector correctly
         mdata = np.rollaxis(self.shape_vector(self.left),2)
@@ -1121,7 +1121,7 @@ class VectorMode(Mode):
 
         #Recalulate power & field for information
         Pang = np.angle(self.mode_power(coord=coord))
-        logging.debug(u"Normalized mode to power angle ∠%.3gπ" % (Pang/pi))
+        logging.debug(u"Normalized mode to power angle  %.3gÀ" % (Pang/pi))
         return enorm
         
     def _normalize_electric_field(self, wg, fourier=True, coord=None):
@@ -1233,8 +1233,8 @@ class VectorMode(Mode):
 
     def magnetic_transverse_field(self, fourier=False, cartesian=None, coord=None):
         '''
-        The transverse magnetic field, calculated from the internal H⁺,H⁻"
-        cartesian=False returns h_t=(h_r,h_ϕ)
+        The transverse magnetic field, calculated from the internal Hz,H{"
+        cartesian=False returns h_t=(h_r,h_Õ)
         cartesian=True returns h_t=(h_x,h_y)
         '''
         hp,hm = self.get_right(swap=self.reverse_right)
@@ -1246,7 +1246,7 @@ class VectorMode(Mode):
 
     def magnetic_field(self, fourier=False, cartesian=None, coord=None):
         """
-        The three component magnetic field (h_r,h_ϕ,h_z) or (hx,hy,hz)
+        The three component magnetic field (h_r,h_Õ,h_z) or (hx,hy,hz)
         """
         hr,ha = self.magnetic_transverse_field(fourier=1)
         hz = 1j/self.beta * self.coord.div_t((hr,ha), fourier=1, m0=self.m0)
@@ -1258,8 +1258,8 @@ class VectorMode(Mode):
 
     def electric_transverse_field(self, fourier=False, cartesian=None, coord=None, wg=None):
         '''
-        The transverse electric field, calculated from the internal E⁺,E⁻"
-        cartesian=False returns e_t=(e_r,e_ϕ)
+        The transverse electric field, calculated from the internal Ez,E{"
+        cartesian=False returns e_t=(e_r,e_Õ)
         cartesian=True returns e_t=(e_x,e_y)
         
         if calculated_electric_field is true then calculate from the the magnetic field
@@ -1277,7 +1277,7 @@ class VectorMode(Mode):
 
     def electric_field(self, wg=None, fourier=False, cartesian=None, coord=None):
         """
-        The three component electric field (e_r,e_ϕ,e_z)
+        The three component electric field (e_r,e_Õ,e_z)
         if calculated_electric_field is true then calculate from the the magnetic field
         """
         if self.left is None:
@@ -1317,7 +1317,7 @@ class CombinedVectorMode(VectorMode):
     def magnetic_transverse_field(self, *args, **kwargs):
         '''
         The transverse magnetic field, calculated from combined modes
-        cartesian=False returns h_t=(h_r,h_ϕ)
+        cartesian=False returns h_t=(h_r,h_Õ)
         cartesian=True returns h_t=(h_x,h_y)
         '''
         ht=None
@@ -1330,8 +1330,8 @@ class CombinedVectorMode(VectorMode):
 
     def electric_transverse_field(self, *args, **kwargs):
         '''
-        The transverse electric field, calculated from the internal E⁺,E⁻"
-        cartesian=False returns e_t=(e_r,e_ϕ)
+        The transverse electric field, calculated from the internal Ez,E{"
+        cartesian=False returns e_t=(e_r,e_Õ)
         cartesian=True returns e_t=(e_x,e_y)
         '''
         et=None
@@ -1343,7 +1343,7 @@ class CombinedVectorMode(VectorMode):
         return et
 
     def magnetic_field(self, *args, **kwargs):
-        "The three component magnetic field (h_r,h_ϕ,h_z) or (hx,hy,hz)"
+        "The three component magnetic field (h_r,h_Õ,h_z) or (hx,hy,hz)"
         h=None
         for m,c in zip(self.modes, self.fieldcoeffs):
             if h is None:
@@ -1353,7 +1353,7 @@ class CombinedVectorMode(VectorMode):
         return h
 
     def electric_field(self, *args, **kwargs):
-        "The three component electric field (e_r,e_ϕ,e_z)"
+        "The three component electric field (e_r,e_Õ,e_z)"
         e=None
         for m,c in zip(self.modes, self.fieldcoeffs):
             if e is None:
